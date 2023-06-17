@@ -7,9 +7,9 @@ TOKEN = '6251950792:AAE0fefbi5ZSmUcU4JrLAb9wLgjDO6Qmi3I'
 bot = telebot.TeleBot(TOKEN)
 
 keys = {
-  'евро':'EUR',
-  'доллар':'USD',
-  'рубль':'RUB',
+  'РµРІСЂРѕ':'EUR',
+  'РґРѕР»Р»Р°СЂ':'USD',
+  'СЂСѓР±Р»СЊ':'RUB',
 }
 
 class ConvertionExeption(Exception):
@@ -18,13 +18,13 @@ class ConvertionExeption(Exception):
 
 @bot.message_handler(commands=['start', 'help'])
 def help(message: telebot.types.Message):
-    text = 'Чтобы начать работу введите комманду боту в следующем формате: \n<имя валюты>\n<в какую валюту перевести> \n<количество переводимой валюты> \nУвидеть список всех доступных валют: /values'
+    text = 'Р§С‚РѕР±С‹ РЅР°С‡Р°С‚СЊ СЂР°Р±РѕС‚Сѓ РІРІРµРґРёС‚Рµ РєРѕРјРјР°РЅРґСѓ Р±РѕС‚Сѓ РІ СЃР»РµРґСѓСЋС‰РµРј С„РѕСЂРјР°С‚Рµ: \n<РёРјСЏ РІР°Р»СЋС‚С‹>\n<РІ РєР°РєСѓСЋ РІР°Р»СЋС‚Сѓ РїРµСЂРµРІРµСЃС‚Рё> \n<РєРѕР»РёС‡РµСЃС‚РІРѕ РїРµСЂРµРІРѕРґРёРјРѕР№ РІР°Р»СЋС‚С‹> \nРЈРІРёРґРµС‚СЊ СЃРїРёСЃРѕРє РІСЃРµС… РґРѕСЃС‚СѓРїРЅС‹С… РІР°Р»СЋС‚: /values'
     bot.reply_to(message, text)
 
 
 @bot.message_handler(commands=['values'])
 def values(message: telebot.types.Message):
-  text = 'Доступные валюты'
+  text = 'Р”РѕСЃС‚СѓРїРЅС‹Рµ РІР°Р»СЋС‚С‹'
   for key in keys.keys():
      text = '\n'.join((text, key, ))
   bot.reply_to(message, text)
@@ -34,38 +34,38 @@ def convert(message: telebot.types.Message):
   values =  message.text.split(' ')
   
   if len(values) != 3:
-    bot.reply_to(message,'Не верное количество параметров. Нужно 3' )
-    raise ConvertionExeption('Не верное количество параметров. Нужно 3')
+    bot.reply_to(message,'РќРµ РІРµСЂРЅРѕРµ РєРѕР»РёС‡РµСЃС‚РІРѕ РїР°СЂР°РјРµС‚СЂРѕРІ. РќСѓР¶РЅРѕ 3' )
+    raise ConvertionExeption('РќРµ РІРµСЂРЅРѕРµ РєРѕР»РёС‡РµСЃС‚РІРѕ РїР°СЂР°РјРµС‚СЂРѕРІ. РќСѓР¶РЅРѕ 3')
     
     
   quote, base, amount = values
 
   if quote == base:
-    bot.reply_to(message,f'Невозможно перевести одинаковые валюты {base}' )
-    raise ConvertionExeption(f'Невозможно перевести одинаковые валюты {base}')
+    bot.reply_to(message,f'РќРµРІРѕР·РјРѕР¶РЅРѕ РїРµСЂРµРІРµСЃС‚Рё РѕРґРёРЅР°РєРѕРІС‹Рµ РІР°Р»СЋС‚С‹ {base}' )
+    raise ConvertionExeption(f'РќРµРІРѕР·РјРѕР¶РЅРѕ РїРµСЂРµРІРµСЃС‚Рё РѕРґРёРЅР°РєРѕРІС‹Рµ РІР°Р»СЋС‚С‹ {base}')
 
   try:
     quote_ticker = keys[quote]
   except KeyError:
-    bot.reply_to(message,f'Не удалось обработать валюту {quote}' )
-    raise ConvertionExeption(f'Не удалось обработать валюту {quote}')
+    bot.reply_to(message,f'РќРµ СѓРґР°Р»РѕСЃСЊ РѕР±СЂР°Р±РѕС‚Р°С‚СЊ РІР°Р»СЋС‚Сѓ {quote}' )
+    raise ConvertionExeption(f'РќРµ СѓРґР°Р»РѕСЃСЊ РѕР±СЂР°Р±РѕС‚Р°С‚СЊ РІР°Р»СЋС‚Сѓ {quote}')
 
   try:
     base_ticker = keys[base]
   except KeyError:
-    bot.reply_to(message,f'Не удалось обработать валюту {base}')
-    raise ConvertionExeption(f'Не удалось обработать валюту {base}')
+    bot.reply_to(message,f'РќРµ СѓРґР°Р»РѕСЃСЊ РѕР±СЂР°Р±РѕС‚Р°С‚СЊ РІР°Р»СЋС‚Сѓ {base}')
+    raise ConvertionExeption(f'РќРµ СѓРґР°Р»РѕСЃСЊ РѕР±СЂР°Р±РѕС‚Р°С‚СЊ РІР°Р»СЋС‚Сѓ {base}')
   
   try:
     amount = float(amount)
   except ValueError:
-    bot.reply_to(message,f'Не удалось обработать количество {amount}')
-    raise ConvertionExeption(f'Не удалось обработать количество {amount}')
+    bot.reply_to(message,f'РќРµ СѓРґР°Р»РѕСЃСЊ РѕР±СЂР°Р±РѕС‚Р°С‚СЊ РєРѕР»РёС‡РµСЃС‚РІРѕ {amount}')
+    raise ConvertionExeption(f'РќРµ СѓРґР°Р»РѕСЃСЊ РѕР±СЂР°Р±РѕС‚Р°С‚СЊ РєРѕР»РёС‡РµСЃС‚РІРѕ {amount}')
 
   r = requests.get(f'https://min-api.cryptocompare.com/data/price?fsym={quote_ticker}&tsyms={base_ticker}')
   total_base = json.loads(r.content)[keys[base]]
-  text = f'Цена {amount} {quote} в {base} - {total_base*amount}' 
-  '''Тут перемножение total_base на аmount чтобы считалась сумма'''
+  text = f'Р¦РµРЅР° {amount} {quote} РІ {base} - {total_base*amount}' 
+  '''РўСѓС‚ РїРµСЂРµРјРЅРѕР¶РµРЅРёРµ total_base РЅР° Р°mount С‡С‚РѕР±С‹ СЃС‡РёС‚Р°Р»Р°СЃСЊ СЃСѓРјРјР°'''
   bot.send_message(message.chat.id, text)
 
 bot.polling(none_stop=True)
